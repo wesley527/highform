@@ -8,6 +8,7 @@ ARQUIVOS
 
 COMO VISUALIZAR
 - Preview publicado: https://wesley527.github.io/highform/
+- Preview alternativo na Netlify: https://highform-3d-studio.netlify.app/
 - Localmente: abra index.html em um navegador atualizado ou execute
   python3 -m http.server 8000 e acesse http://localhost:8000/.
 
@@ -16,6 +17,11 @@ PUBLICAÇÃO NO GITHUB PAGES
 - A origem do Pages é o branch main, pasta raiz (/). O site é estático e não precisa de build.
 - Um push para main publica os arquivos. O preview pode levar alguns minutos para atualizar.
 - Mantenha index.html e a pasta assets juntos na raiz; os caminhos de CSS, JS e imagens são relativos ao site.
+
+PUBLICAÇÃO NA NETLIFY
+- O site highform-3d-studio foi criado para deploy estático. Ele não está ligado ao GitHub para deploy automático.
+- Para publicar uma nova versão, envie index.html, assets/ e _headers para o site Netlify.
+- O arquivo _headers faz o navegador revalidar os arquivos na Netlify após cada publicação.
 
 CONFIGURAR WHATSAPP ANTES DE PUBLICAR
 Abra assets/js/main.js e localize:
