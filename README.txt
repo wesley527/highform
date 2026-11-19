@@ -3,7 +3,7 @@ HIGH FORM 3D STUDIO — WEBSITE
 ARQUIVOS
 - index.html: estrutura e conteúdo do site.
 - assets/css/style.css: identidade visual, responsividade e animações.
-- assets/js/main.js: menu mobile, efeitos no scroll e formulário de orçamento.
+- main.js: menu mobile, efeitos no scroll e formulário de orçamento.
 - assets/images/: logotipo rasterizado extraído do material de marca e imagem conceitual usada no layout.
 
 COMO VISUALIZAR
@@ -16,15 +16,15 @@ PUBLICAÇÃO NO GITHUB PAGES
 - Repositório: https://github.com/wesley527/highform
 - A origem do Pages é o branch main, pasta raiz (/). O site é estático e não precisa de build.
 - Um push para main publica os arquivos. O preview pode levar alguns minutos para atualizar.
-- Mantenha index.html e a pasta assets juntos na raiz; os caminhos de CSS, JS e imagens são relativos ao site.
+- Mantenha index.html, main.js e a pasta assets juntos na raiz; os caminhos de CSS, JS e imagens são relativos ao site.
 
 PUBLICAÇÃO NA NETLIFY
 - O site highform-3d-studio foi criado para deploy estático. Ele não está ligado ao GitHub para deploy automático.
-- Para publicar uma nova versão, envie index.html, assets/ e _headers para o site Netlify.
+- Para publicar uma nova versão, envie index.html, main.js, assets/ e _headers para o site Netlify.
 - O arquivo _headers faz o navegador revalidar os arquivos na Netlify após cada publicação.
 
 CONFIGURAR WHATSAPP ANTES DE PUBLICAR
-Abra assets/js/main.js e localize:
+Abra main.js e localize:
   const WHATSAPP_NUMBER = '';
 
 Substitua o conteúdo vazio pelo número oficial da HIGH FORM, com código do país e DDD, apenas números.

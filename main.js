@@ -40,31 +40,26 @@
 
   // Um único ciclo de scroll controla as entradas e a profundidade em todos os navegadores.
   const revealItems = new Set(document.querySelectorAll('[data-reveal]'));
-  const motionPreference = window.matchMedia
-    ? window.matchMedia('(prefers-reduced-motion: reduce)')
-    : { matches: false };
   const motionButton = document.querySelector('.motion-override');
-  let forceMotion = false;
-  try { forceMotion = window.localStorage.getItem('highform-motion') === 'on'; } catch (_) { /* Armazenamento pode estar bloqueado. */ }
+  let motionPaused = false;
+  try { motionPaused = window.localStorage.getItem('highform-motion-paused') === 'true'; } catch (_) { /* Armazenamento pode estar bloqueado. */ }
 
-  const motionEnabled = () => !motionPreference.matches || forceMotion;
-  const syncMotionPreference = () => {
-    document.documentElement.classList.toggle('force-motion', forceMotion);
-    body.classList.toggle('motion-ready', motionEnabled());
+  const motionEnabled = () => !motionPaused;
+  const syncMotion = () => {
+    document.documentElement.classList.toggle('motion-paused', motionPaused);
+    body.classList.toggle('motion-ready', !motionPaused);
     if (motionButton) {
-      motionButton.hidden = !motionPreference.matches;
-      motionButton.textContent = forceMotion
-        ? 'Desativar animações neste dispositivo'
-        : 'Ativar animações neste dispositivo';
+      motionButton.textContent = motionPaused ? 'Retomar animações' : 'Pausar animações';
+      motionButton.setAttribute('aria-pressed', String(motionPaused));
     }
   };
-  syncMotionPreference();
+  syncMotion();
 
   if (motionButton) {
     motionButton.addEventListener('click', () => {
-      forceMotion = !forceMotion;
-      try { window.localStorage.setItem('highform-motion', forceMotion ? 'on' : 'off'); } catch (_) { /* A escolha vale nesta página. */ }
-      syncMotionPreference();
+      motionPaused = !motionPaused;
+      try { window.localStorage.setItem('highform-motion-paused', String(motionPaused)); } catch (_) { /* A escolha vale nesta página. */ }
+      syncMotion();
       requestMotionUpdate();
     });
   }
@@ -114,15 +109,6 @@
   window.addEventListener('scroll', requestMotionUpdate, { passive: true });
   window.addEventListener('resize', requestMotionUpdate);
   window.addEventListener('pageshow', requestMotionUpdate);
-  const handleMotionPreferenceChange = () => {
-    syncMotionPreference();
-    requestMotionUpdate();
-  };
-  if (motionPreference.addEventListener) {
-    motionPreference.addEventListener('change', handleMotionPreferenceChange);
-  } else if (motionPreference.addListener) {
-    motionPreference.addListener(handleMotionPreferenceChange);
-  }
   updateMotion();
 
   // Formulário: prepara uma mensagem de orçamento no WhatsApp.
