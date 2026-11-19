@@ -7,9 +7,15 @@ ARQUIVOS
 - assets/images/: logotipo rasterizado extraído do material de marca e imagem conceitual usada no layout.
 
 COMO VISUALIZAR
-1. Extraia a pasta do ZIP.
-2. Abra o arquivo index.html em um navegador atualizado.
-3. Para publicar, envie a pasta inteira para a hospedagem, mantendo a estrutura dos arquivos.
+- Preview publicado: https://wesley527.github.io/highform/
+- Localmente: abra index.html em um navegador atualizado ou execute
+  python3 -m http.server 8000 e acesse http://localhost:8000/.
+
+PUBLICAÇÃO NO GITHUB PAGES
+- Repositório: https://github.com/wesley527/highform
+- A origem do Pages é o branch main, pasta raiz (/). O site é estático e não precisa de build.
+- Um push para main publica os arquivos. O preview pode levar alguns minutos para atualizar.
+- Mantenha index.html e a pasta assets juntos na raiz; os caminhos de CSS, JS e imagens são relativos ao site.
 
 CONFIGURAR WHATSAPP ANTES DE PUBLICAR
 Abra assets/js/main.js e localize:

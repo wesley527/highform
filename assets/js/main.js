@@ -38,11 +38,12 @@
     });
   }
 
-  // Reveal suave ao entrar na área visível.
+  // O conteúdo permanece visível mesmo se o JavaScript ou o observer falhar.
   const revealItems = document.querySelectorAll('[data-reveal]');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  if ('IntersectionObserver' in window && !reduceMotion) {
+  if ('IntersectionObserver' in window && !motionPreference.matches) {
+    body.classList.add('motion-ready');
     const revealObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -50,33 +51,37 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -35px 0px' });
+    }, { threshold: 0.06, rootMargin: '0px 0px -8% 0px' });
 
     revealItems.forEach((item) => revealObserver.observe(item));
   } else {
     revealItems.forEach((item) => item.classList.add('is-visible'));
   }
 
-  // Profundidade 3D sutil guiada pela posição do elemento durante o scroll.
+  // Profundidade guiada pelo scroll, inclusive no celular, sem bloquear o gesto nativo.
   const depthItems = Array.from(document.querySelectorAll('.scroll-3d[data-depth]'));
   let ticking = false;
 
   const updateDepth = () => {
-    if (!reduceMotion && window.innerWidth > 760) {
+    if (!motionPreference.matches) {
       const viewportCenter = window.innerHeight * 0.5;
+      const mobile = window.innerWidth <= 760;
       depthItems.forEach((element) => {
         const rect = element.getBoundingClientRect();
         const elementCenter = rect.top + rect.height * 0.5;
         const distance = (elementCenter - viewportCenter) / Math.max(window.innerHeight, 1);
         const depth = Number(element.dataset.depth) || 0.08;
         const bounded = Math.max(-1, Math.min(1, distance));
-        const y = bounded * 38 * depth * 10;
-        const rotateX = -bounded * 5 * depth * 10;
-        const rotateY = bounded * 3.5 * depth * 10;
-        element.style.transform = `perspective(1100px) translate3d(0, ${y}px, 0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        const intensity = mobile ? 0.75 : 1;
+        element.style.setProperty('--depth-y', `${(bounded * depth * 220 * intensity).toFixed(1)}px`);
+        element.style.setProperty('--depth-rx', `${(-bounded * depth * 42 * intensity).toFixed(2)}deg`);
+        element.style.setProperty('--depth-ry', `${(bounded * depth * 30 * intensity).toFixed(2)}deg`);
+        element.style.setProperty('--depth-scale', (1 - Math.abs(bounded) * (mobile ? 0.025 : 0.012)).toFixed(3));
       });
     } else {
-      depthItems.forEach((element) => { element.style.transform = ''; });
+      depthItems.forEach((element) => {
+        ['--depth-y', '--depth-rx', '--depth-ry', '--depth-scale'].forEach((property) => element.style.removeProperty(property));
+      });
     }
     ticking = false;
   };
@@ -90,6 +95,8 @@
 
   window.addEventListener('scroll', requestDepthUpdate, { passive: true });
   window.addEventListener('resize', requestDepthUpdate);
+  window.addEventListener('pageshow', requestDepthUpdate);
+  motionPreference.addEventListener('change', requestDepthUpdate);
   updateDepth();
 
   // Formulário: prepara uma mensagem de orçamento no WhatsApp.
